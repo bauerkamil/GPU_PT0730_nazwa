@@ -14,6 +14,7 @@ void mark_multiples(int p) {
     {
       std::lock_guard<std::mutex> lock(mtx);
       is_prime[(i - 1) / 2] = false;
+      std::lock_guard<std::mutex> unlock(mtx);
     }
   }
 }
@@ -27,12 +28,12 @@ void sieve_of_sundaram(int start, int end) {
   }
 }
 
-void runThreads(int threadsNumber)
+void run_threads(int threads_number)
 {
   std::vector<std::thread> threads;
-  for (int i = 0; i < threadsNumber; i++) {
-    int start = ((i * N) / threadsNumber + 1) / 2;
-    int end = (((i + 1) * N) / threadsNumber) / 2;
+  for (int i = 0; i < threads_number; i++) {
+    int start = ((i * N) / threads_number + 1) / 2;
+    int end = (((i + 1) * N) / threads_number) / 2;
     threads.emplace_back(sieve_of_sundaram, start, end);
   }
 
@@ -44,11 +45,11 @@ void runThreads(int threadsNumber)
 
 int main()
 {
-  // int threadsNumber = std::thread::hardware_concurrency();
-  int threadsNumber = 10;
+  int threads_number = std::thread::hardware_concurrency();
+  // int threads_number = 10;
 
   auto start = std::chrono::high_resolution_clock::now();
-  runThreads(threadsNumber);
+  run_threads(threads_number);
   auto end = std::chrono::high_resolution_clock::now();
 
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
@@ -56,7 +57,6 @@ int main()
   std::cout << "Time taken by threads: "
       << duration.count() << " microseconds" << std::endl;
 
-  std::cout << "2 ";
   for (int i = 1; 2 * i + 1 <= N; i++) {
     if (is_prime[i]) {
       std::cout << 2 * i + 1 << " ";

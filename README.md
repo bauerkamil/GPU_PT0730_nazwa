@@ -4,8 +4,8 @@
 * [General info](#general-info)
 * [Authors](#authors)
 * [Instructions](#instructions)
-    - [Run on CPU](#run-on-cpu)
-    - [Run on GPU](#run-on-gpu)
+    - [Prerequisites](#prerequisites)
+    - [Make commands](#make-commands)
 
 ### General info
 
@@ -22,10 +22,19 @@ It's main goal is to implement two algorithms: the sieve of Eratosthenes and the
 
 ### Instructions
 
-#### Run on CPU
+#### Prerequisites
 
-*here an instruction of how to run the program will appear*
+* g++ installed
+* Make installed
 
-#### Run on GPU
+#### Make commands
 
-*here an instruction of how to run the program will appear*
+The project's Makefile includes Bash scripts (running on PowerShell or other interpreters might not work). To get a full list of make commands input `make` into command line. Underneath is a list of most important commands.
+
+|Command|Description|
+|---|---|
+|`make run1`|compiles and runs the sieve of Eratosthenes on multithreaded CPU|
+|`make run2`|compiles and runs the sieve of Sundaram on multithreaded CPU|
+|`make run3`|compiles and runs the sieve of Eratosthenes on GPU|
+|`make run4`|compiles and runs the sieve of Sundaram on GPU|
+|`make clean`|removes bin folder|
