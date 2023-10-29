@@ -16,7 +16,7 @@ all:
 	@echo "  clean:		remove bin folder"
 
 create:
-	mkdir $(BIN)
+	if [ ! -d $(BIN) ]; then mkdir $(BIN); fi
 
 compile1: create
 	$(CXX) -o $(BIN)/$(ERA_SRC)_cpu $(ERA_SRC)/CPU/main.cpp
@@ -43,4 +43,4 @@ run4: compile4
 	./$(BIN)/$(SUN_SRC)_gpu
 
 clean:
-	rm $(BIN) -r -force
+	rm $(BIN) -rf
