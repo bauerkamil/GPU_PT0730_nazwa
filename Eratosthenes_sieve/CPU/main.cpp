@@ -7,19 +7,6 @@
 const int N = 100000;
 
 std::vector<bool> is_prime(N + 1, true);
-std::mutex mtx;
-
-void mark_multiples(int p)
-{
-    for (int i = p * p; i <= N; i += p)
-    {
-        {
-            std::lock_guard<std::mutex> lock(mtx);
-            is_prime[i] = false;
-            std::lock_guard<std::mutex> unlock(mtx);
-        }
-    }
-}
 
 void sieve_of_eratosthenes(int start, int end)
 {
@@ -27,18 +14,23 @@ void sieve_of_eratosthenes(int start, int end)
     {
         if (is_prime[p])
         {
-            mark_multiples(p);
+            int j = std::max(p * p, (start + p - 1) / p * p);
+            for (; j <= end; j += p)
+            {
+                is_prime[j] = false;
+            }
         }
     }
 }
 
 void run_threads(int threads_number)
 {
+    int chunk_size = N / threads_number;
     std::vector<std::thread> threads;
     for (int i = 0; i < threads_number; i++)
     {
-        int start = (i * N) / threads_number;
-        int end = ((i + 1) * N) / threads_number - 1;
+        int start = i * chunk_size;
+        int end = (i == threads_number - 1) ? N : (i + 1) * chunk_size - 1;
         threads.emplace_back(sieve_of_eratosthenes, start, end);
     }
 
@@ -50,8 +42,8 @@ void run_threads(int threads_number)
 
 int main()
 {
-    // int threads_number = std::thread::hardware_concurrency();
-    int threads_number = 10;
+    int threads_number = std::thread::hardware_concurrency();
+    // int threads_number = 1;
 
     std::cout << "Threads: " << threads_number << std::endl;
 
