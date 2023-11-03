@@ -5,6 +5,7 @@
 
 const int N = 100000;
 const int K = (N - 2) / 2 + 1;
+std::mutex mutex;
 std::vector<bool> is_prime(K, true);
 
 void sieve_of_sundaram(int start, int end) {
@@ -12,11 +13,14 @@ void sieve_of_sundaram(int start, int end) {
         long j = i;
         while (i + j + 2 * i * j <= K && i + j + 2 * i * j > 0) {
             int index = i + j + 2 * i * j;
+            mutex.lock();
             is_prime[index] = false;
+            mutex.unlock;
             j += 1;
         }
     }
 }
+//TODO delete this
 
 void run_threads(int threads_number) {
     int chunk_size = K / threads_number;
