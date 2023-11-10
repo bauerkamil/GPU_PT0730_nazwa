@@ -26,6 +26,7 @@ It's main goal is to implement two algorithms: the sieve of Eratosthenes and the
 
 * g++ installed
 * Make installed
+* NVIDIA CUDA Toolkit installed
 
 #### Make commands
 

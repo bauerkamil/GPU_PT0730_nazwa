@@ -39,6 +39,17 @@ void run_threads(int threads_number)
     }
 }
 
+void print_primes()
+{
+    for (int p = 2; p <= N; p++)
+    {
+        if (is_prime[p])
+        {
+            std::cout << p << " ";
+        }
+    }
+}
+
 int main()
 {
     int threads_number = std::thread::hardware_concurrency();
@@ -55,14 +66,7 @@ int main()
     std::cout << "Time taken by threads: "
               << duration.count() << " microseconds" << std::endl;
 
-    // print primes
-    // for (int p = 2; p <= N; p++)
-    // {
-    //     if (is_prime[p])
-    //     {
-    //         std::cout << p << " ";
-    //     }
-    // }
+    // print_primes();
 
     return 0;
 }

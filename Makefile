@@ -1,4 +1,7 @@
 CXX=g++
+CXXFLAGS= -pthread
+NVCC=nvcc
+# cuda location C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.3
 BIN=bin
 ERA_SRC=Eratosthenes_sieve
 SUN_SRC=Sundaram_sieve
@@ -18,17 +21,17 @@ all:
 create:
 	if [ ! -d $(BIN) ]; then mkdir $(BIN); fi
 
-compile1: create
-	$(CXX) -o $(BIN)/$(ERA_SRC)_cpu $(ERA_SRC)/CPU/main.cpp -pthread
+compile1:
+	$(CXX) -o $(BIN)/$(ERA_SRC)_cpu $(ERA_SRC)/CPU/main.cpp $(CXXFLAGS)
 
-compile2: create
-	$(CXX) -o $(BIN)/$(ERA_SRC)_gpu $(ERA_SRC)/GPU/main.cpp
+compile2:
+	$(NVCC) -o $(BIN)/$(ERA_SRC)_gpu $(ERA_SRC)/GPU/main.cu
 
-compile3: create
-	$(CXX) -o $(BIN)/$(SUN_SRC)_cpu $(SUN_SRC)/CPU/main.cpp -pthread
+compile3:
+	$(CXX) -o $(BIN)/$(SUN_SRC)_cpu $(SUN_SRC)/CPU/main.cpp $(CXXFLAGS)
 
-compile4: create
-	$(CXX) -o $(BIN)/$(SUN_SRC)_gpu $(SUN_SRC)/GPU/main.cpp
+compile4:
+	$(NVCC) -o $(BIN)/$(SUN_SRC)_gpu $(SUN_SRC)/GPU/main.cu
 
 run1: compile1
 	./$(BIN)/$(ERA_SRC)_cpu
