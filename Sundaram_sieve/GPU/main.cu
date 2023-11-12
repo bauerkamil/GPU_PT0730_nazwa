@@ -13,12 +13,16 @@ __global__ void sieve_of_sundaram(bool* is_prime, int chunk_size, int threads_nu
     int end = (index == threads_number - 1) ? K : (index + 1) * chunk_size;
     for (int i = start; i <= end; i++)
     {
-        int j = i;
-        while (i + j + 2 * i * j <= K && i + j + 2 * i * j > 0)
-        {
-            int index = i + j + 2 * i * j;
-            is_prime[index] = false;
-            j += 1;
+        if(is_prime[i]) {
+            int j = i;
+            long val = i + j + 2 * i * j;
+            while (val <= K && val > 0)
+            {
+                int index = i + j + 2 * i * j;
+                is_prime[index] = false;
+                j += 1;
+                val = i + j + 2 * i * j;
+            }
         }
     }
 }
