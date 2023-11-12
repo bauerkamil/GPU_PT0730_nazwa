@@ -5,13 +5,15 @@
 
 const int N = 100000;
 const int K = (N - 2) / 2;
-std::vector<bool> is_prime(K, true);
+// std::vector<bool> is_prime(K, true);
+bool *is_prime;
 
 void sieve_of_sundaram(int start, int end)
 {
     for (long i = start; i <= end; i++)
     {
-        if (is_prime[i]) {
+        if (is_prime[i])
+        {
             long j = i;
             long val = i + j + 2 * i * j;
             while (val <= K && val > 0)
@@ -25,8 +27,26 @@ void sieve_of_sundaram(int start, int end)
     }
 }
 
-void run_threads(int threads_number)
+void print_primes()
 {
+    for (int p = 0; p <= K; p++)
+    {
+        if (is_prime[p])
+        {
+            std::cout << 2 * p + 1 << " ";
+        }
+    }
+}
+
+void run_threads(int threads_number, bool print_results = false)
+{
+
+    is_prime = new bool[K];
+    for (int i = 0; i < K; i++)
+    {
+        is_prime[i] = true;
+    }
+
     int chunk_size = K / threads_number;
     std::vector<std::thread> threads;
     for (int i = 0; i < threads_number; i++)
@@ -40,17 +60,11 @@ void run_threads(int threads_number)
     {
         th.join();
     }
-}
-
-void print_primes()
-{
-    for (int p = 0; p <= K; p++)
+    if (print_results)
     {
-        if (is_prime[p])
-        {
-            std::cout << 2 * p + 1 << " ";
-        }
+        print_primes();
     }
+    delete[] is_prime;
 }
 
 int main()
@@ -68,7 +82,7 @@ int main()
     std::cout << "Time taken by threads: "
               << duration.count() << " microseconds" << std::endl;
 
-//     print_primes();
+    //     print_primes();
 
     return 0;
 }

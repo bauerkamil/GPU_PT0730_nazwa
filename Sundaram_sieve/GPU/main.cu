@@ -29,6 +29,7 @@ __global__ void sieve_of_sundaram(bool* is_prime, int chunk_size, int threads_nu
 
 void print_primes(bool *is_prime, int K)
 {
+    memset(is_prime, false, (k + 1) * sizeof(bool));
     for (int p = 0; p <= K; p++)
     {
         if (is_prime[p])

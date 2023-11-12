@@ -45,5 +45,8 @@ run3: compile3
 run4: compile4
 	./$(BIN)/$(SUN_SRC)_gpu
 
+profile2: compile2
+	nvprof ./$(BIN)/$(ERA_SRC)_gpu
+
 clean:
 	rm $(BIN) -rf

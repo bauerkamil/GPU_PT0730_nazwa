@@ -3,9 +3,8 @@
 #include <vector>
 #include <chrono>
 
-const int N = 100000;
-
-std::vector<bool> is_prime(N + 1, true);
+const int N = 1 << 10;
+bool *is_prime;
 
 void sieve_of_eratosthenes(int start, int end)
 {
@@ -22,8 +21,25 @@ void sieve_of_eratosthenes(int start, int end)
     }
 }
 
-void run_threads(int threads_number)
+void print_primes()
 {
+    for (int p = 2; p <= N; p++)
+    {
+        if (is_prime[p])
+        {
+            std::cout << p << " ";
+        }
+    }
+}
+
+void run_threads(int threads_number, bool print_results = false)
+{
+    is_prime = new bool[N + 1];
+    for (int i = 0; i < N + 1; i++)
+    {
+        is_prime[i] = true;
+    }
+
     int chunk_size = N / threads_number;
     std::vector<std::thread> threads;
     for (int i = 0; i < threads_number; i++)
@@ -37,17 +53,13 @@ void run_threads(int threads_number)
     {
         th.join();
     }
-}
 
-void print_primes()
-{
-    for (int p = 2; p <= N; p++)
+    if (print_results)
     {
-        if (is_prime[p])
-        {
-            std::cout << p << " ";
-        }
+        print_primes();
     }
+
+    delete[] is_prime;
 }
 
 int main()
@@ -65,8 +77,6 @@ int main()
 
     std::cout << "Time taken by threads: "
               << duration.count() << " microseconds" << std::endl;
-
-    // print_primes();
 
     return 0;
 }
