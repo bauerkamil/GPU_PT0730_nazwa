@@ -1,6 +1,45 @@
+#include <cassert>
+#include <cmath>
+#include <cstring>
 #include <iostream>
 #include <vector>
 #include <chrono>
+
+std::vector<int> sieve_of_eratosthenes_cpu(int max)
+{
+    bool* buffor = new bool[max];
+    for (size_t i = 0; i < max; i++)
+    {
+        buffor[i] = true;
+    }
+    
+    std::vector<int> primes;
+
+    int sqrt = std::sqrt(max);
+    for (int p = 2; p < sqrt; p++)
+    {
+        if (buffor[p])
+        {
+            primes.push_back(p);
+
+            for (int i = 2; i * p < max; i++)
+            {
+                buffor[p * i] = false;
+            }
+        }
+    }
+
+    for (size_t i = sqrt; i < max; i++)
+    {
+        if (buffor[i]) {
+            primes.push_back(i);
+        }
+    }
+    
+    delete[] buffor;
+
+    return primes;
+}
 
 // Kernel function for the sieve
 __global__ void sieve_of_eratosthenes(bool* is_prime, int chunk_size, int threads_number, int N)
@@ -66,20 +105,30 @@ void run_threads(int threads_number, int N)
   cudaFree(is_prime);
 }
 
-int main()
-{
-  
-  const int N = 84000000;
 
-  int threads_number = 3584;
-  std::cout << "Threads: " << threads_number << std::endl;
+int main(){
+    int K = 10000;
+    
+    int sqrt = std::sqrt(K);
 
-  auto start = std::chrono::high_resolution_clock::now();
-  run_threads(threads_number, N);
-  auto end = std::chrono::high_resolution_clock::now();
+    std::vector<int> primes = sieve_of_eratosthenes_cpu(sqrt);
 
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    for (int i : primes)
+    {
+        std::cout << i << " ";
+    }
 
-  std::cout << "Time taken by threads: "
+    const int N = 84000;
+
+    int threads_number = 3584;
+    std::cout << "Threads: " << threads_number << std::endl;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    run_threads(threads_number, N);
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+    std::cout << "Time taken by threads: "
             << duration.count() << " microseconds" << std::endl;
 }
