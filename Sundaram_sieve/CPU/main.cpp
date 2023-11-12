@@ -11,14 +11,16 @@ void sieve_of_sundaram(int start, int end)
 {
     for (long i = start; i <= end; i++)
     {
-        long j = i;
-        long val = i + j + 2 * i * j;
-        while (val <= K && val > 0)
-        {
-            int index = i + j + 2 * i * j;
-            is_prime[index] = false;
-            j += 1;
-            val = i + j + 2 * i * j;
+        if (is_prime[i]) {
+            long j = i;
+            long val = i + j + 2 * i * j;
+            while (val <= K && val > 0)
+            {
+                int index = i + j + 2 * i * j;
+                is_prime[index] = false;
+                j += 1;
+                val = i + j + 2 * i * j;
+            }
         }
     }
 }
