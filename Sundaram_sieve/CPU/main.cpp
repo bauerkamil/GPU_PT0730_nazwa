@@ -4,7 +4,7 @@
 #include <chrono>
 
 const int N = 100000;
-const int K = (N - 2) / 2 + 1;
+const int K = (N - 2) / 2;
 std::vector<bool> is_prime(K, true);
 
 void sieve_of_sundaram(int start, int end)
@@ -12,11 +12,13 @@ void sieve_of_sundaram(int start, int end)
     for (long i = start; i <= end; i++)
     {
         long j = i;
-        while (i + j + 2 * i * j <= K && i + j + 2 * i * j > 0)
+        long val = i + j + 2 * i * j;
+        while (val <= K && val > 0)
         {
             int index = i + j + 2 * i * j;
             is_prime[index] = false;
             j += 1;
+            val = i + j + 2 * i * j;
         }
     }
 }
@@ -40,7 +42,7 @@ void run_threads(int threads_number)
 
 void print_primes()
 {
-    for (int p = 0; p <= N; p++)
+    for (int p = 0; p <= K; p++)
     {
         if (is_prime[p])
         {
@@ -51,6 +53,7 @@ void print_primes()
 
 int main()
 {
+
     int threads_number = std::thread::hardware_concurrency();
     std::cout << "Target num: " << N << std::endl;
     std::cout << "Threads: " << threads_number << std::endl;
@@ -63,7 +66,7 @@ int main()
     std::cout << "Time taken by threads: "
               << duration.count() << " microseconds" << std::endl;
 
-    // print_primes();
+//     print_primes();
 
     return 0;
 }
