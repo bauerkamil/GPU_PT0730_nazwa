@@ -6,7 +6,6 @@
 __global__ void sieve_of_eratosthenes(bool* is_prime, int chunk_size, int threads_number, int N)
 {
   int index = blockIdx.x * blockDim.x + threadIdx.x;
-  int stride = blockDim.x * gridDim.x;
   int j, j1, j2;
   int start = index * chunk_size;
   int end = (index == threads_number - 1) ? N : (index + 1) * chunk_size - 1;
