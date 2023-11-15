@@ -3,7 +3,7 @@
 #include <vector>
 #include <chrono>
 
-const int N = 84000000;
+const int N = 2137000000;
 bool *is_prime;
 
 void sieve_of_eratosthenes(int start, int end)

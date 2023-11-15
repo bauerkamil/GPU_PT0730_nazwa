@@ -63,7 +63,7 @@ void run_threads(int threads_number, int N)
     // Wait for GPU to finish before accessing on host
     cudaDeviceSynchronize();
 
-    print_primes(is_prime, N);
+    // print_primes(is_prime, N);
 
     // Free memory
     cudaFree(is_prime);
@@ -71,10 +71,10 @@ void run_threads(int threads_number, int N)
 
 int main()
 {
-    const int N = 100;
-    int threads_number = 32;
-    std::cout << "Target num: " << N << std::endl;
-    std::cout << "Threads: " << threads_number << std::endl;
+    const int N = 2137000000;
+    int threads_number = 8192;
+    // std::cout << "Target num: " << N << std::endl;
+    // std::cout << "Threads: " << threads_number << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
     run_threads(threads_number, N);
     auto end = std::chrono::high_resolution_clock::now();
