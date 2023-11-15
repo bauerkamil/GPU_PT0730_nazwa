@@ -1,52 +1,49 @@
 CXX=g++
 CXXFLAGS= -pthread
 NVCC=nvcc
-# cuda location C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.3
 BIN=bin
 ERA_SRC=Eratosthenes_sieve
 SUN_SRC=Sundaram_sieve
 
 all:
+#indentations below are used for proper display in the help target
 	@echo "Please use 'make <target>'"
-	@echo "  compile1:		compile eratosthenes cpu"
-	@echo "  compile2:		compile eratosthenes gpu"
-	@echo "  compile3:		compile sundaram cpu"
-	@echo "  compile4:		compile sundaram gpu"
-	@echo "  run1:			run eratosthenes cpu"
-	@echo "  run2:			run eratosthenes gpu"
-	@echo "  run3:			run sundaram cpu"
-	@echo "  run4:			run sundaram gpu"
-	@echo "  clean:		remove bin folder"
+	@echo "  compile_era:				compile eratosthenes cpu"
+	@echo "  compile_era_gpu:			compile eratosthenes gpu"
+	@echo "  compile_sun:				compile sundaram cpu"
+	@echo "  compile_sun_gpu:			compile sundaram gpu"
+	@echo "  run_era:				run eratosthenes cpu"
+	@echo "  run_era_gpu:				run eratosthenes gpu"
+	@echo "  run_sun:				run sundaram cpu"
+	@echo "  run_sun_gpu:				run sundaram gpu"
+	@echo "  clean:				remove bin folder"
 
 create:
 	if [ ! -d $(BIN) ]; then mkdir $(BIN); fi
 
-compile1:
+compile_era:
 	$(CXX) -o $(BIN)/$(ERA_SRC)_cpu $(ERA_SRC)/CPU/main.cpp $(CXXFLAGS)
 
-compile2:
+compile_era_gpu:
 	$(NVCC) -o $(BIN)/$(ERA_SRC)_gpu $(ERA_SRC)/GPU/main.cu
 
-compile3:
+compile_sun:
 	$(CXX) -o $(BIN)/$(SUN_SRC)_cpu $(SUN_SRC)/CPU/main.cpp $(CXXFLAGS)
 
-compile4:
+compile_sun_gpu:
 	$(NVCC) -o $(BIN)/$(SUN_SRC)_gpu $(SUN_SRC)/GPU/main.cu
 
-run1: compile1
+run_era: compile_era
 	./$(BIN)/$(ERA_SRC)_cpu
 
-run2: compile2
+run_era_gpu: compile_era_gpu
 	./$(BIN)/$(ERA_SRC)_gpu
 
-run3: compile3
+run_sun: compile_sun
 	./$(BIN)/$(SUN_SRC)_cpu
 
-run4: compile4
+run_sun_gpu: compile_sun_gpu
 	./$(BIN)/$(SUN_SRC)_gpu
-
-profile2: compile2
-	nvprof ./$(BIN)/$(ERA_SRC)_gpu
 
 clean:
 	rm $(BIN) -rf
