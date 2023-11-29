@@ -29,20 +29,25 @@ void sieve_of_sundaram(int start, int end)
 
 void print_primes()
 {
-    for (int p = 0; p <= K; p++)
+    int count = 1;
+    std::cout << "Primes: 2 ";
+    for (int p = 1; p <= K; p++)
     {
         if (is_prime[p])
         {
             std::cout << 2 * p + 1 << " ";
+            count++;
         }
     }
+    std::cout << std::endl
+              << "Count: " << count << std::endl;
 }
 
 void run_threads(int threads_number, bool print_results = false)
 {
 
-    is_prime = new bool[K];
-    for (int i = 0; i < K; i++)
+    is_prime = new bool[K + 1];
+    for (int i = 0; i <= K; i++)
     {
         is_prime[i] = true;
     }
