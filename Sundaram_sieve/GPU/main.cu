@@ -5,7 +5,7 @@
 #include <chrono>
 
 const uint64_t MAX_STRIDE = 256000000;
-const int BLOCK_SIZE = 256;
+int BLOCK_SIZE = 256;
 bool* sieve_buffer_host = nullptr;
 
 __global__ void sieve_kernel(uint64_t max, bool *sieve_buffer)
@@ -16,11 +16,11 @@ __global__ void sieve_kernel(uint64_t max, bool *sieve_buffer)
     for (uint64_t i = index; i <= max; i += stride)
     {
         if(sieve_buffer[i]) {
-            int j = i;
-            long val = i + j + 2 * i * j;
-            while (val <= max && val > 0)
+            uint64_t j = i;
+            uint64_t val = i + j + 2 * i * j;
+            while (val <= max && val >= i + j)
             {
-                int index2 = i + j + 2 * i * j;
+                uint64_t index2 = i + j + 2 * i * j;
                 sieve_buffer[index2] = false;
                 j += 1;
                 val = i + j + 2 * i * j;
@@ -84,9 +84,25 @@ void check_primes(int target)
     std::cout << "Found " << count << " prime numbers" << std::endl; 
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     int target = 400;
+
+    for (int i = 1; i < argc; ++i) {
+        int integerValue = std::atoi(argv[i]);
+
+        if (integerValue == 0 && argv[i][0] != '0') {
+            std::cerr << "Invalid integer: " << argv[i] << std::endl;
+            
+        }else{
+            if(i==1){
+                target = integerValue;
+            }
+            if(i==2){
+                BLOCK_SIZE = integerValue;
+            }
+        }
+    }
 
     auto start = std::chrono::high_resolution_clock::now();
     int k = (target - 2) / 2;

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <fstream>
 
 const uint64_t MAX_STRIDE = 256000000;
 const int BLOCK_SIZE = 256;
@@ -120,9 +121,22 @@ void check_primes(int target)
     std::cout << "Found " << count << " prime numbers" << std::endl; 
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     int target = 2137000000;
+
+    for (int i = 1; i < argc; ++i) {
+        int integerValue = std::atoi(argv[i]);
+
+        if (integerValue == 0 && argv[i][0] != '0') {
+            std::cerr << "Invalid integer: " << argv[i] << std::endl;
+            
+        } else{
+            target = integerValue;
+        }
+    }
+
+
 
     auto start = std::chrono::high_resolution_clock::now();
     int sqrt = std::sqrt(target);
@@ -136,5 +150,21 @@ int main()
     std::cout << "Time taken by threads: "
               << duration.count() << " microseconds" << std::endl;
 
-    // check_primes(target);
+    std::ifstream inFile("outputEraGPU.csv", std::ios::app);
+    inFile.seekg(0, std::ios::end);
+    std::streampos fileSize = inFile.tellg();
+
+    bool isEmpty = (fileSize == 0);
+    inFile.close();
+
+    std::ofstream outFile("outputEraGPU.csv", std::ios::app);
+    if (!outFile) {
+        std::cerr << "Error opening file!" << std::endl;
+        return 1;
+    }
+    if (isEmpty) {
+         outFile << "size;time\n";
+    } 
+    outFile << target << ";" << duration.count() << "\n";
+    check_primes(target);
 }

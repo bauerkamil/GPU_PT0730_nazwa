@@ -2,9 +2,10 @@
 #include <vector>
 #include <thread>
 #include <chrono>
+#include <fstream>
 
-const int N = 100000;
-const int K = (N - 2) / 2;
+int N = 100000;
+int K = 0;
 // std::vector<bool> is_prime(K, true);
 bool *is_prime;
 
@@ -16,7 +17,7 @@ void sieve_of_sundaram(int start, int end)
         {
             long j = i;
             long val = i + j + 2 * i * j;
-            while (val <= K && val > 0)
+            while (val <= K && val >= i + j)
             {
                 int index = i + j + 2 * i * j;
                 is_prime[index] = false;
@@ -35,7 +36,7 @@ void print_primes()
     {
         if (is_prime[p])
         {
-            std::cout << 2 * p + 1 << " ";
+            // std::cout << 2 * p + 1 << " ";
             count++;
         }
     }
@@ -46,6 +47,7 @@ void print_primes()
 void run_threads(int threads_number, bool print_results = false)
 {
 
+    
     is_prime = new bool[K + 1];
     for (int i = 0; i <= K; i++)
     {
@@ -72,8 +74,21 @@ void run_threads(int threads_number, bool print_results = false)
     delete[] is_prime;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+
+    for (int i = 1; i < argc; ++i) {
+        int integerValue = std::atoi(argv[i]);
+
+        if (integerValue == 0 && argv[i][0] != '0') {
+            std::cerr << "Invalid integer: " << argv[i] << std::endl;
+            
+        } else{
+            N = integerValue;
+        }
+    }
+
+    K = (N - 2) / 2;
 
     int threads_number = std::thread::hardware_concurrency();
     std::cout << "Target num: " << N << std::endl;
@@ -87,7 +102,25 @@ int main()
     std::cout << "Time taken by threads: "
               << duration.count() << " microseconds" << std::endl;
 
-    //     print_primes();
+        print_primes();
+
+    std::ifstream inFile("outputSundaCPU.csv", std::ios::app);
+    inFile.seekg(0, std::ios::end);
+    std::streampos fileSize = inFile.tellg();
+
+    bool isEmpty = (fileSize == 0);
+    inFile.close();
+
+    std::ofstream outFile("outputSundaCPU.csv", std::ios::app);
+    if (!outFile) {
+        std::cerr << "Error opening file!" << std::endl;
+        return 1;
+    }
+    if (isEmpty) {
+         outFile << "size;time\n";
+    } 
+    outFile << N << ";" << duration.count() << "\n";
+
 
     return 0;
 }

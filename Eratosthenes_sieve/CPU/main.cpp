@@ -2,8 +2,9 @@
 #include <thread>
 #include <vector>
 #include <chrono>
+#include <fstream>
 
-const int N = 2137000000;
+int N = 2137000000;
 bool *is_prime;
 
 void sieve_of_eratosthenes(int start, int end)
@@ -23,13 +24,17 @@ void sieve_of_eratosthenes(int start, int end)
 
 void print_primes()
 {
+    int count = 0;
     for (int p = 2; p <= N; p++)
     {
         if (is_prime[p])
         {
-            std::cout << p << " ";
+            // std::cout << p << " ";
+            count++;
         }
     }
+    std::cout << std::endl
+              << "Count: " << count << std::endl;
 }
 
 void run_threads(int threads_number, bool print_results = false)
@@ -62,8 +67,20 @@ void run_threads(int threads_number, bool print_results = false)
     delete[] is_prime;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+
+    for (int i = 1; i < argc; ++i) {
+        int integerValue = std::atoi(argv[i]);
+
+        if (integerValue == 0 && argv[i][0] != '0') {
+            std::cerr << "Invalid integer: " << argv[i] << std::endl;
+            
+        } else{
+            N = integerValue;
+        }
+    }
+
     int threads_number = std::thread::hardware_concurrency();
     // int threads_number = 1;
 
@@ -77,6 +94,24 @@ int main()
 
     std::cout << "Time taken by threads: "
               << duration.count() << " microseconds" << std::endl;
+
+    std::ifstream inFile("outputEraCPU.csv", std::ios::app);
+    inFile.seekg(0, std::ios::end);
+    std::streampos fileSize = inFile.tellg();
+
+    bool isEmpty = (fileSize == 0);
+    inFile.close();
+
+    std::ofstream outFile("outputEraCPU.csv", std::ios::app);
+    if (!outFile) {
+        std::cerr << "Error opening file!" << std::endl;
+        return 1;
+    }
+    if (isEmpty) {
+         outFile << "size;time\n";
+    } 
+    outFile << N << ";" << duration.count() << "\n";
+    print_primes();
 
     return 0;
 }
