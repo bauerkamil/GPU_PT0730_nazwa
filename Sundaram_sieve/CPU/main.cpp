@@ -78,13 +78,13 @@ int main(int argc, char *argv[])
 {
 
     for (int i = 1; i < argc; ++i) {
-        int integerValue = std::atoi(argv[i]);
+        char *end;
+        uint64_t myUint64 = std::strtoull(argv[1], &end, 10);
 
-        if (integerValue == 0 && argv[i][0] != '0') {
-            std::cerr << "Invalid integer: " << argv[i] << std::endl;
-            
-        } else{
-            N = integerValue;
+        if (*end != '\0') {
+            std::cerr << "Error converting " << argv[1] << " to uint64_t." << std::endl;
+        }else{
+            N = myUint64;
         }
     }
 
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     std::cout << "Time taken by threads: "
               << duration.count() << " microseconds" << std::endl;
 
-        print_primes();
+        // print_primes();
 
     std::ifstream inFile("outputSundaCPU.csv", std::ios::app);
     inFile.seekg(0, std::ios::end);
