@@ -4,22 +4,22 @@
 #include <chrono>
 #include <fstream>
 
-int N = 100000;
-int K = 0;
+uint64_t N = 100000;
+uint64_t K = 0;
 // std::vector<bool> is_prime(K, true);
 bool *is_prime;
 
-void sieve_of_sundaram(int start, int end)
+void sieve_of_sundaram(uint64_t start, uint64_t end)
 {
-    for (long i = start; i <= end; i++)
+    for (uint64_t i = start; i <= end; i++)
     {
         if (is_prime[i])
         {
-            long j = i;
-            long val = i + j + 2 * i * j;
-            while (val <= K && val >= i + j)
+            uint64_t j = i;
+            uint64_t val = i + j + 2 * i * j;
+            while (val <= K && val > 0)
             {
-                int index = i + j + 2 * i * j;
+                uint64_t index = i + j + 2 * i * j;
                 is_prime[index] = false;
                 j += 1;
                 val = i + j + 2 * i * j;
@@ -31,8 +31,8 @@ void sieve_of_sundaram(int start, int end)
 void print_primes()
 {
     int count = 1;
-    std::cout << "Primes: 2 ";
-    for (int p = 1; p <= K; p++)
+    // std::cout << "Primes: 2 ";
+    for (uint64_t p = 1; p <= K; p++)
     {
         if (is_prime[p])
         {
@@ -58,8 +58,8 @@ void run_threads(int threads_number, bool print_results = false)
     std::vector<std::thread> threads;
     for (int i = 0; i < threads_number; i++)
     {
-        int start = i * chunk_size + 1;
-        int end = (i == threads_number - 1) ? K : (i + 1) * chunk_size;
+        uint64_t start = i * chunk_size + 1;
+        uint64_t end = (i == threads_number - 1) ? K : (i + 1) * chunk_size;
         threads.emplace_back(sieve_of_sundaram, start, end);
     }
 
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     std::cout << "Target num: " << N << std::endl;
     std::cout << "Threads: " << threads_number << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
-    run_threads(threads_number);
+    run_threads(threads_number, true);
     auto end = std::chrono::high_resolution_clock::now();
 
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
