@@ -170,5 +170,5 @@ int main(int argc, char *argv[])
          outFile << "size;time\n";
     } 
     outFile << target << ";" << duration.count() << "\n";
-    check_primes(target);
+    // check_primes(target);
 }

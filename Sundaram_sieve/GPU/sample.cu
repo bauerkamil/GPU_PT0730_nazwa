@@ -78,15 +78,15 @@ int main(int argc, char *argv[]) {
     // Perform Sieve of Sundaram on GPU
     sieveOfSundaramGPU(numbers, n);
 
-    int count = 1;
-    printf("2 ");
-    for (int i = 1; i < n; i++) {
-        if (numbers[i] != 0) {
-            // printf("%d ", 2 * i + 1);
-            count++;
-        }
-    }
-    printf("\nCount: %d", count);
+    // int count = 1;
+    // printf("2 ");
+    // for (int i = 1; i < n; i++) {
+    //     if (numbers[i] != 0) {
+    //         // printf("%d ", 2 * i + 1);
+    //         count++;
+    //     }
+    // }
+    // printf("\nCount: %d", count);
     
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

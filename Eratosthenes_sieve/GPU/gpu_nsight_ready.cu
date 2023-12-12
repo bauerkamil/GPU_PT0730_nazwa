@@ -121,9 +121,24 @@ void check_primes(int target)
     std::cout << "Found " << count << " prime numbers" << std::endl; 
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     int target = 2137000000;
+
+    for (int i = 1; i < argc; ++i) {
+        int integerValue = std::atoi(argv[i]);
+
+        if (integerValue == 0 && argv[i][0] != '0') {
+            std::cerr << "Invalid integer: " << argv[i] << std::endl;
+            
+        } else{
+            if(i==1){
+                target = integerValue;
+            }else{
+                BLOCK_SIZE = integerValue;
+            }
+        }
+    }
 
     auto start = std::chrono::high_resolution_clock::now();
     int sqrt = std::sqrt(target);

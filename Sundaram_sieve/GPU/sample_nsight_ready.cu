@@ -49,8 +49,23 @@ void sieveOfSundaramGPU(int *numbers, int n) {
     cudaFree(d_numbers);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     int n = 2137000000;
+
+    for (int i = 1; i < argc; ++i) {
+        int integerValue = std::atoi(argv[i]);
+
+        if (integerValue == 0 && argv[i][0] != '0') {
+            std::cerr << "Invalid integer: " << argv[i] << std::endl;
+            
+        } else{
+            if(i==1){
+                n = integerValue;
+            }else{
+                BLOCK_SIZE = integerValue;
+            }
+        }
+    }
 
     auto start = std::chrono::high_resolution_clock::now();
     n /= 2;

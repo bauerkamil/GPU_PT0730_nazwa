@@ -1,9 +1,10 @@
 import csv
 import matplotlib.pyplot as plt
 
+
 def read_csv(file_path):
     # Open the CSV file
-    with open(file_path, 'r') as csv_file:
+    with open(file_path + '.csv', 'r') as csv_file:
         # Create a CSV reader
         csv_reader = csv.reader(csv_file, delimiter=';')
 
@@ -31,19 +32,20 @@ def read_csv(file_path):
         for size, times in data.items():
             avg_data[size] = sum(times) / len(times)
 
-    return avg_data.keys(), avg_data.values()
+    return avg_data.keys(), avg_data.values(), file_path[-3:]
 
 
 def plot_and_save_data(pairs, plot_path):
     plt.clf()
-    for sizes, times in pairs:
-        plt.plot(sizes, times, '-')
+    for sizes, times, name in pairs:
+        plt.plot(sizes, times, '-', label=name)
         plt.plot(sizes, times, 'o')
 
     plt.xscale('log')
     plt.title('Wykres funkcji czasu w zależności od rozmiaru')
     plt.xlabel('Rozmiar')
     plt.ylabel('Czas')
+    plt.legend()
     plt.savefig(plot_path)
 
 
@@ -54,9 +56,10 @@ def main():
         pairs = []
         for file_name in group:
             # Read the CSV file
-            pairs.append(read_csv(f'{file_name}.csv'))
+            pairs.append(read_csv(file_name))
 
-        plot_and_save_data(pairs, f'{file_name}.png')
+        plot_and_save_data(pairs, ''.join(group)+'.png')
+
 
 if __name__ == '__main__':
     main()
