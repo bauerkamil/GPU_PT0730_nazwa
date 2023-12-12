@@ -8,7 +8,7 @@ foreach ($param in $params) {
     # iterate 10 times
     foreach ($i in 1..10) {
         # run the exe with the parameter
-        & $exe_name $param
+        & $exe_name $param 
         # delay for 1 second
         Start-Sleep -Seconds 0.5
     }
