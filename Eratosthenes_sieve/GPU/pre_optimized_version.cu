@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <fstream>
 
 // Kernel function for the sieve
 __global__ void sieve_of_eratosthenes(bool* is_prime, int chunk_size, int threads_number, int N)
@@ -81,4 +82,21 @@ int main(int argc, char *argv[])
 
   std::cout << "Time taken by threads: "
             << duration.count() << " microseconds" << std::endl;
+
+  std::ifstream inFile("outputEraGPU.csv", std::ios::app);
+    inFile.seekg(0, std::ios::end);
+    std::streampos fileSize = inFile.tellg();
+
+    bool isEmpty = (fileSize == 0);
+    inFile.close();
+
+    std::ofstream outFile("outputPreEraGPU.csv", std::ios::app);
+    if (!outFile) {
+        std::cerr << "Error opening file!" << std::endl;
+        return 1;
+    }
+    if (isEmpty) {
+         outFile << "size;time\n";
+    } 
+    outFile << N << ";" << duration.count() << "\n";
 }

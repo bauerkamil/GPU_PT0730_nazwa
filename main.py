@@ -13,7 +13,7 @@ def read_csv(file_path):
 
         # Find the indices of 'size' and 'time' in the header
         size_index = header.index('size')
-        time_index = header.index('time')
+        time_index = header.index('achieved_occupancy')
 
         # Initialize lists to store size and time data
         data = {}
@@ -21,7 +21,7 @@ def read_csv(file_path):
         # Read the rows and extract data
         for row in csv_reader:
             size = int(row[size_index])
-            time = int(row[time_index])
+            time = float(row[time_index])
 
             if size not in data:
                 data[size] = [time]
@@ -32,7 +32,7 @@ def read_csv(file_path):
         for size, times in data.items():
             avg_data[size] = sum(times) / len(times)
 
-    return avg_data.keys(), avg_data.values(), 'Eratosthenes' if file_path == 'outputEraGPU' else 'Sundaram'
+    return avg_data.keys(), avg_data.values(), 'Eratosthenes' if 'outputEratosthenesNsight' in file_path else 'Sundaram'
 
 
 def plot_and_save_data(pairs, plot_path):
@@ -42,23 +42,23 @@ def plot_and_save_data(pairs, plot_path):
         plt.plot(sizes, times, 'o')
 
     plt.xscale('log')
-    plt.title('Wykres funkcji czasu w zależności od rozmiaru')
+    plt.title('Wykres funkcji osiągniętej zajętości w zależności od rozmiaru')
     plt.xlabel('Rozmiar')
-    plt.ylabel('Czas')
+    plt.ylabel('Osiągnięta zajętość')
     plt.legend()
     plt.savefig(plot_path)
 
 
 def main():
-    groups = [['outputEraGPU', 'outputSundaGPU']]
+    groups = [['outputEratosthenesNsight', 'outputSundaramNsight']]
 
     for group in groups:
         pairs = []
         for file_name in group:
             # Read the CSV file
-            pairs.append(read_csv(file_name))
+            pairs.append(read_csv(f'./nsight_data/{file_name}'))
 
-        plot_and_save_data(pairs, ''.join(group)+'.png')
+        plot_and_save_data(pairs, 'achieved_occupancy.png')
 
 
 if __name__ == '__main__':
