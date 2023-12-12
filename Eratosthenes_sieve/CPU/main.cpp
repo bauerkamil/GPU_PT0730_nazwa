@@ -4,16 +4,16 @@
 #include <chrono>
 #include <fstream>
 
-uint64_t N = 2137000000;
+int N = 1000000;
 bool *is_prime;
 
-void sieve_of_eratosthenes(uint64_t start, uint64_t end)
+void sieve_of_eratosthenes(int start, int end)
 {
-    for (uint64_t p = 2; p * p <= end; p++)
+    for (int p = 2; p * p <= end; p++)
     {
         if (is_prime[p])
         {
-            uint64_t j = std::max(p * p, (start + p - 1) / p * p);
+            int j = std::max(p * p, (start + p - 1) / p * p);
             for (; j <= end; j += p)
             {
                 is_prime[j] = false;
@@ -25,7 +25,7 @@ void sieve_of_eratosthenes(uint64_t start, uint64_t end)
 void print_primes()
 {
     int count = 0;
-    for (uint64_t p = 2; p <= N; p++)
+    for (int p = 2; p <= N; p++)
     {
         if (is_prime[p])
         {
@@ -49,8 +49,8 @@ void run_threads(int threads_number, bool print_results = false)
     std::vector<std::thread> threads;
     for (int i = 0; i < threads_number; i++)
     {
-        uint64_t start = i * chunk_size;
-        uint64_t end = (i == threads_number - 1) ? N : (i + 1) * chunk_size - 1;
+        int start = i * chunk_size;
+        int end = (i == threads_number - 1) ? N : (i + 1) * chunk_size - 1;
         threads.emplace_back(sieve_of_eratosthenes, start, end);
     }
 
@@ -71,23 +71,23 @@ int main(int argc, char *argv[])
 {
 
     for (int i = 1; i < argc; ++i) {
-        char *end;
-        uint64_t myUint64 = std::strtoull(argv[1], &end, 10);
+        int integerValue = std::atoi(argv[i]);
 
-        if (*end != '\0') {
-            std::cerr << "Error converting " << argv[1] << " to uint64_t." << std::endl;
-        }else{
-            N = myUint64;
+        if (integerValue == 0 && argv[i][0] != '0') {
+            std::cerr << "Invalid integer: " << argv[i] << std::endl;
+            
+        } else{
+            N = integerValue;
         }
     }
 
     int threads_number = std::thread::hardware_concurrency();
-    // uint64_t threads_number = 1;
+    // int threads_number = 1;
 
     std::cout << "Threads: " << threads_number << std::endl;
 
     auto start = std::chrono::high_resolution_clock::now();
-    run_threads(threads_number);
+    run_threads(threads_number,true);
     auto end = std::chrono::high_resolution_clock::now();
 
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
@@ -111,7 +111,6 @@ int main(int argc, char *argv[])
          outFile << "size;time\n";
     } 
     outFile << N << ";" << duration.count() << "\n";
-    print_primes();
 
     return 0;
 }
