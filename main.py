@@ -34,36 +34,29 @@ def read_csv(file_path):
     return avg_data.keys(), avg_data.values()
 
 
-def plot_and_save_data(sizes, times, plot_path):
+def plot_and_save_data(pairs, plot_path):
     plt.clf()
+    for sizes, times in pairs:
+        plt.plot(sizes, times, '-')
+        plt.plot(sizes, times, 'o')
 
-    # Connect the points with a line
-    plt.plot(sizes, times, '-')
-
-    # Create a plot
-    plt.plot(sizes, times, 'o')
-
-    # Add a title
+    plt.xscale('log')
     plt.title('Wykres funkcji czasu w zależności od rozmiaru')
-
-    # Add labels
     plt.xlabel('Rozmiar')
     plt.ylabel('Czas')
-
-    # Save the plot
-    plt.xscale('log')
     plt.savefig(plot_path)
 
 
 def main():
-    file_names = ['outputEraGPU', 'outputEraCPU', 'outputSundaGPU', 'outputSundaCPU']
+    groups = [['outputEraGPU', 'outputEraCPU'], ['outputSundaGPU', 'outputSundaCPU']]
 
-    for file_name in file_names:
-        # Read the CSV file
-        sizes, times = read_csv(f'{file_name}.csv')
+    for group in groups:
+        pairs = []
+        for file_name in group:
+            # Read the CSV file
+            pairs.append(read_csv(f'{file_name}.csv'))
 
-        # Plot and save the data
-        plot_and_save_data(sizes, times, f'{file_name}.png')
+        plot_and_save_data(pairs, f'{file_name}.png')
 
 if __name__ == '__main__':
     main()

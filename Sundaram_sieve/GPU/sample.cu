@@ -59,7 +59,11 @@ int main(int argc, char *argv[]) {
             std::cerr << "Invalid integer: " << argv[i] << std::endl;
             
         } else{
-            n = integerValue;
+            if(i==1){
+                n = integerValue;
+            }else{
+                BLOCK_SIZE = integerValue;
+            }
         }
     }
 

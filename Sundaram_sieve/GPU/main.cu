@@ -86,7 +86,7 @@ void check_primes(int target)
 
 int main(int argc, char *argv[])
 {
-    int target = 400;
+    int target = 2137000000;
 
     for (int i = 1; i < argc; ++i) {
         int integerValue = std::atoi(argv[i]);
