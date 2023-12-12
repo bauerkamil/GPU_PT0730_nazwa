@@ -66,10 +66,9 @@ void run_threads(int threads_number, int N)
   cudaFree(is_prime);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-  
-  const int N = 84000000;
+  int N = std::atoi(argv[1]);
 
   int threads_number = 3584;
   std::cout << "Threads: " << threads_number << std::endl;
