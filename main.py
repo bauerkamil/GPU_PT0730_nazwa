@@ -32,7 +32,7 @@ def read_csv(file_path):
         for size, times in data.items():
             avg_data[size] = sum(times) / len(times)
 
-    return avg_data.keys(), avg_data.values(), file_path[-3:]
+    return avg_data.keys(), avg_data.values(), 'Eratosthenes' if file_path == 'outputEraGPU' else 'Sundaram'
 
 
 def plot_and_save_data(pairs, plot_path):
@@ -50,7 +50,7 @@ def plot_and_save_data(pairs, plot_path):
 
 
 def main():
-    groups = [['outputEraGPU', 'outputEraCPU'], ['outputSundaGPU', 'outputSundaCPU']]
+    groups = [['outputEraGPU', 'outputSundaGPU']]
 
     for group in groups:
         pairs = []
